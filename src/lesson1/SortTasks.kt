@@ -2,6 +2,11 @@
 
 package lesson1
 
+import java.io.File
+import java.io.IOException
+import java.lang.Integer.parseInt
+import java.util.*
+
 /**
  * Сортировка времён
  *
@@ -31,7 +36,24 @@ package lesson1
  * В случае обнаружения неверного формата файла бросить любое исключение.
  */
 fun sortTimes(inputName: String, outputName: String) {
-    TODO()
+    if (File(inputName).readLines().isEmpty()) throw IOException()
+    val list = ArrayList<Int>()
+    File(inputName).forEachLine {
+        val part = it.split(":").toTypedArray()
+        list.add((parseInt(part[0]) * (60 * 60) + (parseInt(part[1])) * 60) +
+                (parseInt(part[2])))
+    }
+    val toInt = list.toIntArray()
+    quickSort(toInt)
+    val bf = File(outputName).bufferedWriter()
+    for (o in toInt) {
+        val hour = o / (60 * 60)
+        val minute = o / 60 % 60
+        val second = o % 3600 % 60
+        bf.write(String.format("%02d:%02d:%02d", hour, minute, second))
+        bf.newLine()
+    }
+    bf.close()
 }
 
 /**
@@ -95,7 +117,22 @@ fun sortAddresses(inputName: String, outputName: String) {
  * 121.3
  */
 fun sortTemperatures(inputName: String, outputName: String) {
-    TODO()
+    val list = ArrayList<Int>()
+    File(inputName).forEachLine {
+        val temp = (it.toDouble() * 10).toInt()
+        list.add(temp)
+    }
+    val toInt = list.toIntArray()
+    quickSort(toInt)
+    val bf = File(outputName).bufferedWriter()
+    for (o in toInt) {
+        val f = o.toDouble() / 10.0
+        bf.write(f.toString())
+        bf.newLine()
+    }
+
+    bf.close()
+
 }
 
 /**
@@ -146,6 +183,9 @@ fun sortSequence(inputName: String, outputName: String) {
  * Результат: second = [1 3 4 9 9 13 15 20 23 28]
  */
 fun <T : Comparable<T>> mergeArrays(first: Array<T>, second: Array<T?>) {
-    TODO()
+    for (i in 0 until first.size) {
+        second[i] = first[i]
+    }
+    second.sort()
 }
 
