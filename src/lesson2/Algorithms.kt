@@ -2,6 +2,8 @@
 
 package lesson2
 
+import java.io.File
+
 /**
  * Получение наибольшей прибыли (она же -- поиск максимального подмассива)
  * Простая
@@ -27,7 +29,21 @@ package lesson2
  * В случае обнаружения неверного формата файла бросить любое исключение.
  */
 fun optimizeBuyAndSell(inputName: String): Pair<Int, Int> {
-    TODO()
+    val list = ArrayList<Int>()
+    var res = Pair<Int, Int>(1, 1)
+    var margin = 0
+    File(inputName).forEachLine {
+        list.add(it.toInt())
+    }
+    for (i in 0 until list.size) {
+        for (j in i + 1 until list.size - 1) {
+            if (list[j] - list[i] > margin) {
+                margin = list[j] - list[i]
+                res = Pair(i + 1, j + 1)
+            }
+        }
+    }
+    return res
 }
 
 /**
@@ -77,7 +93,12 @@ fun optimizeBuyAndSell(inputName: String): Pair<Int, Int> {
  * Х х Х
  */
 fun josephTask(menNumber: Int, choiceInterval: Int): Int {
-    TODO()
+    var res = 0
+    if (menNumber == 1)
+        return res + 1
+    for (i in 0 until menNumber)
+        res = (res + choiceInterval) % (i + 1)
+    return res + 1
 }
 
 /**
@@ -92,7 +113,27 @@ fun josephTask(menNumber: Int, choiceInterval: Int): Int {
  * вернуть ту из них, которая встречается раньше в строке first.
  */
 fun longestCommonSubstring(first: String, second: String): String {
-    TODO()
+    var res = ""
+    var max = 0
+    var length: Int
+    for (i in 0 until first.length) {
+        for (j in 0 until second.length) {
+            length = 0
+            var k1 = i
+            var k2 = j
+            while (k1 < first.length && k2 < second.length &&
+                    first[k1] == second[k2]) {
+                k1++
+                k2++
+                length++
+            }
+            if (length > max) {
+                max = length
+                res = first.substring(i, k1)
+            }
+        }
+    }
+    return res
 }
 
 /**
@@ -106,7 +147,23 @@ fun longestCommonSubstring(first: String, second: String): String {
  * Единица простым числом не считается.
  */
 fun calcPrimesNumber(limit: Int): Int {
-    TODO()
+    var counter = 0
+    if (limit <= 1) return 0
+    for (i in 1..limit) {
+        if (primeNumber(i)) counter++
+    }
+    return counter
+}
+
+fun primeNumber(n: Int): Boolean {
+    var i = 2
+    if (n <= 1) return false
+    while (i * i <= n) {
+        if (n % i == 0)
+            return false
+        i++
+    }
+    return true
 }
 
 /**
