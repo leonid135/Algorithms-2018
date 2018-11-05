@@ -237,6 +237,7 @@ abstract class AbstractTaskTests : AbstractFileTests() {
         }
 
 
+
         fun BufferedWriter.writeNumbers(numbers: List<Int>) {
             for (n in numbers) {
                 write("$n")
