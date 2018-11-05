@@ -36,7 +36,7 @@ import java.util.*
  * В случае обнаружения неверного формата файла бросить любое исключение.
  *
  * оценка
- * ресурсоемкость = O(n)  производительность = O(n
+ * ресурсоемкость = O(n)  производительность = O(n log n)
  */
 fun sortTimes(inputName: String, outputName: String) {
     if (File(inputName).readLines().isEmpty()) throw IOException()
@@ -45,9 +45,7 @@ fun sortTimes(inputName: String, outputName: String) {
         val part = it.split(":").toTypedArray()
         list.add((parseInt(part[0]) * (60 * 60) + (parseInt(part[1])) * 60) +
                 (parseInt(part[2])))
-        if ((part[0].toInt() > 23 || part[1].toInt() > 60 ||
-                        part[2].toInt() > 60 || part[0].toInt() < 0 ||
-                        part[1].toInt() < 0 || part[2].toInt() < 0))
+        if (!it.matches(Regex("""(([0-2][0-9]):[0-5][0-9]:[0-5][0-9])""")))
             throw IOException()
     }
     val toInt = list.toIntArray()
@@ -124,7 +122,7 @@ fun sortAddresses(inputName: String, outputName: String) {
  * 121.3
  *
  * оценка
- * ресурсоемкость = O(1) трудоемкость =  O(n)
+ * ресурсоемкость = O(1) трудоемкость =  O(n log n)
  */
 fun sortTemperatures(inputName: String, outputName: String) {
     val list = ArrayList<Int>()
@@ -174,10 +172,47 @@ fun sortTemperatures(inputName: String, outputName: String) {
  * 2
  * 2
  * 2
+ *
+ *
+ * оценка
+ * ресурсоемкость = O(n) трудоемкость =  O(n)
+ *
  */
 fun sortSequence(inputName: String, outputName: String) {
-    TODO()
+    val arrList = ArrayList<Int>()
+    val res = HashMap<Int, Int>()
+    var max = 0
+    var c = 0
+    File(inputName).forEachLine {
+        arrList.add(it.toInt())
+    }
+    for (i in arrList) {
+        if (res.containsKey(i)) {
+            res[i] = res[i]!! + 1
+        } else {
+            res[i] = 1
+        }
+    }
+    for (i in res.keys) {
+        if (i < c && res.getValue(i) == max || res.getValue(i) > max) {
+            max = res.getValue(i)
+            c = i
+        }
+    }
+    val bf = File(outputName).bufferedWriter()
+    for (l in arrList) {
+        if (l != c) {
+            bf.write("$l")
+            bf.newLine()
+        }
+    }
+    for (i in 1..max) {
+        bf.write("$c")
+        bf.newLine()
+    }
+    bf.close()
 }
+
 
 /**
  * Соединить два отсортированных массива в один
@@ -195,7 +230,7 @@ fun sortSequence(inputName: String, outputName: String) {
  *
  *
  * оценка
- * ресурсоемкость = 0(1) трудоемкость =  O(n)
+ * ресурсоемкость = 0(1) трудоемкость =  O(n log n)
  */
 fun <T : Comparable<T>> mergeArrays(first: Array<T>, second: Array<T?>) {
     for (i in 0 until first.size) {
