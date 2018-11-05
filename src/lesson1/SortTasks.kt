@@ -34,6 +34,9 @@ import java.util.*
  * 19:56:14
  *
  * В случае обнаружения неверного формата файла бросить любое исключение.
+ *
+ * оценка
+ * ресурсоемкость = O(n)  производительность = O(n
  */
 fun sortTimes(inputName: String, outputName: String) {
     if (File(inputName).readLines().isEmpty()) throw IOException()
@@ -42,6 +45,10 @@ fun sortTimes(inputName: String, outputName: String) {
         val part = it.split(":").toTypedArray()
         list.add((parseInt(part[0]) * (60 * 60) + (parseInt(part[1])) * 60) +
                 (parseInt(part[2])))
+        if ((part[0].toInt() > 23 || part[1].toInt() > 60 ||
+                        part[2].toInt() > 60 || part[0].toInt() < 0 ||
+                        part[1].toInt() < 0 || part[2].toInt() < 0))
+            throw IOException()
     }
     val toInt = list.toIntArray()
     quickSort(toInt)
@@ -115,10 +122,14 @@ fun sortAddresses(inputName: String, outputName: String) {
  * 24.7
  * 99.5
  * 121.3
+ *
+ * оценка
+ * ресурсоемкость = O(1) трудоемкость =  O(n)
  */
 fun sortTemperatures(inputName: String, outputName: String) {
     val list = ArrayList<Int>()
     File(inputName).forEachLine {
+        if (it.toDouble() < -273.0 || it.toDouble() > 500.0) throw IOException()
         val temp = (it.toDouble() * 10).toInt()
         list.add(temp)
     }
@@ -181,6 +192,10 @@ fun sortSequence(inputName: String, outputName: String) {
  * second = [null null null null null 1 3 9 13 18 23]
  *
  * Результат: second = [1 3 4 9 9 13 15 20 23 28]
+ *
+ *
+ * оценка
+ * ресурсоемкость = 0(1) трудоемкость =  O(n)
  */
 fun <T : Comparable<T>> mergeArrays(first: Array<T>, second: Array<T?>) {
     for (i in 0 until first.size) {

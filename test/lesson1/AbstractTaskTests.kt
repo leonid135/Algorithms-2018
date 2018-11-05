@@ -2,8 +2,10 @@ package lesson1
 
 import java.io.BufferedWriter
 import java.io.File
+import java.io.IOException
 import java.util.*
 import kotlin.math.abs
+import kotlin.test.fail
 
 abstract class AbstractTaskTests : AbstractFileTests() {
 
@@ -36,6 +38,29 @@ abstract class AbstractTaskTests : AbstractFileTests() {
         try {
             sortTimes("input/time_in3.txt", "temp.txt")
             assertFileContent("temp.txt", File("input/time_out3.txt").readLines().joinToString(separator = "\n"))
+        } finally {
+            File("temp.txt").delete()
+        }
+
+        // new
+
+        try {
+            sortTimes("input/time_in4.txt", "temp.txt")
+            assertFileContent("temp.txt",
+                    """
+                        01:01:01
+                        14:24:34
+                        19:18:17
+                        21:22:23
+                    """.trimIndent())
+        } finally {
+            File("temp.txt").delete()
+        }
+        try {
+            sortTimes("input/time_in5.txt", "temp.txt")
+            fail("IOException")
+        } catch (ex: IOException) {
+
         } finally {
             File("temp.txt").delete()
         }
@@ -98,6 +123,37 @@ abstract class AbstractTaskTests : AbstractFileTests() {
         } finally {
             File("temp.txt").delete()
         }
+
+        // new
+
+        try {
+            sortTemperatures("input/temp_in2.txt", "temp.txt")
+            assertFileContent("temp.txt",
+                    """
+                    -5.7
+                    -2.4
+                    -0.7
+                    -0.2
+                    -0.1
+                    -0.1
+                    0.0
+                    0.1
+                    0.2
+                    5.7
+                """.trimIndent()
+            )
+        } finally {
+            File("temp.txt").delete()
+        }
+        try {
+            sortTimes("input/time_in5.txt", "temp.txt")
+            fail("IOException")
+        } catch (ex: IOException) {
+
+        } finally {
+            File("temp.txt").delete()
+        }
+
 
         fun testGeneratedTemperatures(size: Int) {
             try {
