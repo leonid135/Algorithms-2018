@@ -1,11 +1,8 @@
 package lesson3
 
 import org.junit.jupiter.api.Tag
-import kotlin.test.Test
 import java.util.*
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 class BinaryTreeTest {
     private fun testAdd(create: () -> CheckableSortedSet<Int>) {
@@ -75,6 +72,16 @@ class BinaryTreeTest {
             }
             assertTrue(binarySet.checkInvariant())
         }
+        //new
+
+        val tree = KtBinaryTree<Int>()
+        for (i in 1..100) {
+            tree.add(i)
+        }
+        for (i in 61..100) {
+            tree.remove(i)
+        }
+        assertEquals(60, tree.size)
     }
 
     @Test
@@ -108,6 +115,35 @@ class BinaryTreeTest {
             while (treeIt.hasNext()) {
                 assertEquals(treeIt.next(), binaryIt.next())
             }
+        }
+        // new
+
+
+        val tree = KtBinaryTree<Int>()
+        val treeIt = tree.iterator()
+        try {
+            treeIt.next()
+            fail("Excepted NoSuchElementException")
+        } catch (ex: NoSuchElementException) {
+
+        }
+    }
+// new
+
+    @Test
+    fun testIteratorRemove() {
+        val tree = KtBinaryTree<Int>()
+        tree.add(3)
+        tree.add(6)
+        tree.add(9)
+        tree.add(12)
+        val treeIt = tree.iterator()
+        try {
+            treeIt.remove()
+            treeIt.next()
+            fail("Excepted NoSuchElementException")
+        } catch (ex: NoSuchElementException) {
+
         }
     }
 
@@ -157,6 +193,40 @@ class BinaryTreeTest {
             }
             assertTrue(binarySet.checkInvariant())
         }
+        // new
+
+        val tree = KtBinaryTree<Int>()
+        tree.add(2)
+        tree.add(3)
+        tree.add(4)
+        tree.add(5)
+        val binaryIt = tree.iterator()
+        binaryIt.next()
+        binaryIt.remove()
+        assertEquals(3, tree.size)
+    }
+
+    // new
+
+    @Test
+    fun treeTest() {
+        val tree = KtBinaryTree<Int>()
+        tree.add(1)
+        tree.add(3)
+        tree.add(-1)
+        tree.add(-3)
+        tree.add(5)
+        assertEquals(5, tree.size)
+        tree.remove(5)
+        assertFalse(tree.contains(5))
+        assertEquals(4, tree.size)
+        val tree2 = KtBinaryTree<Int>()
+        tree2.add(0)
+        tree2.add(0)
+        tree2.add(0)
+        tree2.add(1)
+        assertEquals(2, tree2.size)
+        assertTrue(tree2.contains(0))
     }
 
     @Test
