@@ -2,6 +2,9 @@
 
 package lesson5
 
+import java.util.*
+import kotlin.NoSuchElementException
+
 /**
  * Эйлеров цикл.
  * Средняя
@@ -87,9 +90,42 @@ fun Graph.minimumSpanningTree(): Graph {
  * В данном случае ответ (A, E, F, D, G, J)
  *
  * Эта задача может быть зачтена за пятый и шестой урок одновременно
+ *
+ *
+ *
+ *
+ * оценка
+ * E - количество рёбер в графе
+ * V - количество вершин в графе
+ * ресурсоемкость = O(V) Трудоемкость = O(E + V)
  */
 fun Graph.largestIndependentVertexSet(): Set<Graph.Vertex> {
-    TODO()
+    val firstSetVert = HashSet<Graph.Vertex>()
+    val SecondSetVert = HashSet<Graph.Vertex>()
+    return if (this.vertices.size == 0)
+        emptySet()
+    else {
+        firstSetVert.add(this.vertices.iterator().next())
+        distribute(this.vertices.iterator().next(), firstSetVert, SecondSetVert, this)
+        if (SecondSetVert.size <= firstSetVert.size) firstSetVert
+        else
+            SecondSetVert
+    }
+}
+
+fun distribute(vertex: Graph.Vertex, firstSetVert: MutableSet<Graph.Vertex>,
+               SecondSetVert: MutableSet<Graph.Vertex>, graph: Graph) {
+    for (vert in graph.getNeighbors(vertex)) {
+        if (!SecondSetVert.contains(vert) && !firstSetVert.contains(vert)) {
+            if (SecondSetVert.contains(vertex)) {
+                firstSetVert.add(vert)
+            } else {
+                SecondSetVert.add(vert)
+            }
+            distribute(vert, firstSetVert, SecondSetVert, graph)
+        }
+    }
+
 }
 
 /**
@@ -111,7 +147,31 @@ fun Graph.largestIndependentVertexSet(): Set<Graph.Vertex> {
  * J ------------ K
  *
  * Ответ: A, E, J, K, D, C, H, G, B, F, I
+ *
+ *
+ *
+ *
+ * оценка
+ *
+ * V - количество вершин в графе
+ * ресурсоемкость = O(V!) Трудоемкость = O(V!)
+ *
  */
 fun Graph.longestSimplePath(): Path {
-    TODO()
+    if (this.vertices.isEmpty()) throw NoSuchElementException()
+    val deque = ArrayDeque<Path>()
+    var t = Path(this.vertices.first())
+    this.vertices.forEach { it ->
+        deque.add(Path(it))
+    }
+    while (deque.isNotEmpty()) {
+        val first = deque.pop()
+        if (first.length > t.length) {
+            t = first
+            if (first.vertices.size == this.vertices.size) break
+        }
+        val neighbor = this.getNeighbors(first.vertices.last())
+        neighbor.filter { !first.contains(it) }.forEach { deque.push(Path(first, this, it)) }
+    }
+    return t
 }
